@@ -1,5 +1,7 @@
 package com.fxl.configuration;
 
+import java.sql.SQLException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +36,12 @@ public class DruidDataSourceConfig {
         dataSource.setMaxActive(dataSourceProperties.getMaxActive());
         dataSource.setMaxWait(dataSourceProperties.getMaxWait());
         dataSource.setTimeBetweenEvictionRunsMillis(dataSourceProperties.getTimeBetweenEvictionRunsMillis());
+        try {
+        	// 配置监控统计拦截的filters，去掉后监控界面sql无法统计
+			dataSource.setFilters("stat,wall");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
         return dataSource;
     }
 }
